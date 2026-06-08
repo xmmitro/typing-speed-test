@@ -296,6 +296,39 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  const audioMap = {
+    ' ': { press: document.querySelector('.js-pres-space-audio'), release: document.querySelector('.js-release-space-audio') },
+    'Backspace': { press: document.querySelector('.js-pres-backspace-audio'), release: document.querySelector('.js-release-backspace-audio') },
+    'Enter': { press: document.querySelector('.js-pres-enter-audio'), release: document.querySelector('.js-release-enter-audio') },
+    'generic': { press: document.querySelector('.js-pres-generic-audio'), release: document.querySelector('.js-release-generic-audio') }
+  };
+
+  function playAudio(key, type) {
+    const soundSet = audioMap[key] || audioMap['generic'];
+    const audio = soundSet[type];
+
+    if (audio) {
+      audio.currentTime = 0;
+      audio.volume = 1;
+      audio.play().catch(e => {});
+    }
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if ((e.key.length > 1 && e.key !== 'Backspace') || e.altKey || e.ctrlKey || e.metaKey) {
+      return;
+    }
+    if (e.repeat) return;
+    playAudio(e.key, 'press');
+  });
+  
+  document.addEventListener('keyup', (e) => {
+    if ((e.key.length > 1 && e.key !== 'Backspace') || e.altKey || e.ctrlKey || e.metaKey) {
+      return;
+    }
+    playAudio(e.key, 'release');
+  });
+
   function handleTyping(event) {
     if (!passageBank) return;
 
