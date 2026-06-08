@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  <link rel="stylesheet" href="style.css">
+
+  <script src="script.js" defer></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" defer></script>
+  
+  <title>Frontend Mentor | Typing Speed Test</title>
+
+  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
+  <style>
+    .attribution { font-size: 0.6875rem; text-align: center; }
+    .attribution a { color: hsl(228, 45%, 44%); }
+  </style>
+</head>
+<body>
+  
+  <header>
+    <div class="desktop-logo">
+      <img src="assets/images/logo-large.svg">
+    </div>
+    <div class="mobile-logo">
+      <img src="assets/images/logo-small.svg" alt="">
+    </div>
+
+    <div class="right-header">
+      <img src="assets/images/icon-personal-best.svg">
+      <p class="desktop-best">
+        Personal best: <span>92<!-- PB --> WPM</span> 
+      </p>
+      <p class="mobile-best">
+        Best: <span>92<!-- PB --> WPM</span>
+      </p>
+    </div>
+  </header>
+
+  <main style="position: relative;">
+    <div class="top-section js-top-section">
+      <div class="stats">
+        <div class="stat-box border-spacer">
+          <p class="stat-label">WPM: <!-- WPM --> </p>
+          <span class="stat-val js-wpm">0</span>
+        </div>
+        <div class="stat-box border-spacer">
+          <p class="stat-label">Accuracy: <!-- Accuracy --></p>
+          <span class="stat-val js-accuracy">100%</span>
+        </div>
+        <div class="stat-box">
+          <p class="stat-label">Time: <!-- Time --> </p>
+          <span class="stat-val js-timer">0:60</span>
+        </div>
+      </div>
+
+      <div class="difficulty-mode-wrapper">
+        <div class="selection-container" data-type="difficulty">
+          <p class="desktop-label">Difficulty:</p>
+          <div class="desktop-btns">
+            <button class="diff-switches-btn" data-value="easy">Easy</button>
+            <button class="diff-switches-btn" data-value="medium">Medium</button>
+            <button class="diff-switches-btn active" data-value="hard">Hard</button>
+          </div>
+          <div class="mobile-dropdown-wrapper">
+            <button class="dropdown-trigger-btn">
+              <span class="trigger-text">Hard</span>
+              <span class="chevron-icon"></span>
+            </button>
+            <div class="dropdown-menu-list">
+              <div class="dropdown-item" data-value="easy">
+                <span class="radio-dot"></span> Easy
+              </div>
+              <div class="dropdown-item" data-value="medium">
+                <span class="radio-dot"></span> Medium
+              </div>
+              <div class="dropdown-item active" data-value="hard">
+                <span class="radio-dot"></span> Hard
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="selection-container" data-type="mode">
+          <p class="desktop-label">Mode:</p>
+
+          <!-- <div class="desktop-btns">
+            <button class="mood-switches-btn active" data-value="timed-60s">Timed (60s)</button>
+            <button class="mood-switches-btn" data-value="passage">Passage</button>
+          </div> -->
+          <div class="mobile-dropdown-wrapper">
+            <button class="dropdown-trigger-btn">
+              <span class="trigger-text">Timed (60s)</span>
+              <span class="chevron-icon"></span>
+            </button>
+            <div class="dropdown-menu-list">
+              <div class="dropdown-item" data-value="15">
+                <span class="radio-dot"></span> Timed (15s)
+              </div>
+              <div class="dropdown-item" data-value="30">
+                <span class="radio-dot"></span> Timed (30s)
+              </div>
+              <div class="dropdown-item active" data-value="60">
+                <span class="radio-dot"></span> Timed (60s)
+              </div>
+              <div class="dropdown-item" data-value="120">
+                <span class="radio-dot"></span> Timed (120s)
+              </div>
+              <div class="dropdown-item" data-value="passage">
+                <span class="radio-dot"></span> Passage
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="passage-container js-passage-container">
+      <!-- Passage -->
+       <p class="passage js-passage">
+        The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. "We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods," the lead researcher observed. "Globalization isn't as modern as we assume."
+       </p>
+
+       <div class="start-btn-container bg-blur-effect js-start-btn-container">
+         <button class="start-btn js-start-btn">Start Typing Test</button>
+         <p>Or click the text and start typing</p>
+       </div>
+
+    </div>
+
+    <div class="restart-btn-container js-restart-btn-container hidden">
+      <button class="restart-btn js-restart-test-btn">Restart Test ↺</button>
+    </div>
+  
+  
+    <div class="test-complete-container hidden js-results-panel">
+      <div class="star-top">
+        <img class="star-2" src="assets/images/pattern-star-2.svg">
+      </div>
+
+      <div class="js-share-result-card">
+        <!-- Test Complete Start -->
+        <div class="test-complete-img-container">
+          <div class="img-circle"></div>
+          <div class="img-circle-1"></div>
+          <img class="test-complete-img js-test-complete-img" src="assets/images/icon-completed.svg">
+          <img class="test-complete-img hidden js-smashed-img" src="assets/images/icon-new-pb.svg">
+        </div>
+        <h1 class="js-high-score hidden">High Score Smashed!</h1>
+        <h1 class="js-baseline-score hidden">Baseline Established!</h1>
+        <h1 class="js-normal-test">Test Complete!</h1>
+        <p class="sub-msg js-sub-msg">Solid run. Keep pushing to beat your high score.</p>
+      
+        <div class="final-stats-row">
+          <div class="final-stat">
+            <span class="label">WPM:</span>
+            <span class="value js-final-wpm">0</span>
+          </div>
+          <div class="final-stat">
+            <span class="label">Accuracy:</span>
+            <span class="value js-final-accuracy">100%</span>
+          </div>
+          <div class="final-stat">
+            <span class="label">Characters:</span>
+            <span class="value js-final-chars">0/0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="share-stats-go-again-btn-con">
+        <button class="go-again-btn share-stats-btn js-share-btn">Share</button>
+        <button class="go-again-btn js-restart-btn">Go Again ↺</button>
+      </div>
+
+      <div class="star-bottom">
+        <img class="star-1" src="assets/images/pattern-star-1.svg">
+      </div>
+      
+    </div>
+    
+    <!-- TO-DO: Implement Shareable Results Card -->
+    <!-- Share result card -->
+    <div class="shareable-result-cards hidden" id="capture">
+      <button class="close-btn">x</button>
+      <p>Your can share results on your social media</p>
+      <div class="card">
+        <button class="x-icon">X</button>
+        <button class="x-icon">Y</button>
+        <button class="x-icon">Z</button>
+      </div>
+    </div>
+  </main>
+
+  <div class="pattern-confetti-div js-pattern-confetti hidden">
+    <!-- <img class="pattern-confetti" src="assets/images/pattern-confetti.svg"> -->
+  </div>
+  
+  <!-- Test Complete End -->
+
+  <footer class="attribution js-attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge">Frontend Mentor</a>. 
+    Coded by <a href="https://github.com/xmmitro" target="_blank">0xSumito</a>.
+  </footer>
+  
+</body>
+</html>
