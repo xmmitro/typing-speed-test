@@ -57,6 +57,28 @@ document.addEventListener("DOMContentLoaded", () => {
   const kybrTriggerText = kybrSelectionContainers.querySelector('.kybr-trigger-text');
   const kybrMenuItems = kybrSelectionContainers.querySelectorAll('.kybr-dropdown-item');
 
+  const tooltipEls = document.querySelectorAll('.tooltip');
+
+  function hideTooltips() {
+    tooltipEls.forEach(tooltip => {
+      tooltip.classList.add('hidden');
+    });
+  }
+
+  function showTooltips() {
+    tooltipEls.forEach(tooltip => {
+      tooltip.classList.remove('hidden');
+    });
+  }
+
+  function closeAllDropdowns() {
+    document.querySelectorAll('.mobile-dropdown-wrapper').forEach(dropdown => {
+      dropdown.classList.remove('open');
+    });
+
+    kybrDropdownWrapper.classList.remove('open');
+  }
+
   async function captureScreenshot() {
     try {
       const canvas = await html2canvas(shareResultEl, {
@@ -210,14 +232,16 @@ document.addEventListener("DOMContentLoaded", () => {
       e.stopPropagation();
       dropdownTrigger.blur();
 
-      selectionContainers.forEach(other => {
-        if (other !== container) {
-          other.querySelector('.mobile-dropdown-wrapper').classList.remove('open');
-        }
-      });
-      kybrDropdownWrapper.classList.remove('open');
+      const willOpen = !dropdownWrapper.classList.contains('open');
 
-      dropdownWrapper.classList.toggle('open');
+      closeAllDropdowns();
+
+      if (willOpen) {
+        dropdownWrapper.classList.add('open');
+        hideTooltips();
+      } else {
+        showTooltips();
+      }
     });
 
     // Handler 3: Mobile Floating List Option Selections
@@ -226,6 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const value = item.getAttribute('data-value');
         updateStateAndUI(value);
         dropdownWrapper.classList.remove('open');
+        showTooltips();
       });
     });
   });
@@ -251,15 +276,17 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2. Open/Close dropdown toggle behavior
   kybrDropdownTriggerBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    kybrDropdownWrapper.classList.toggle('open');
-    // close the other difficulty and mode dropdown
-    selectionContainers.forEach(container => {
-      selectionContainers.forEach(other => {
-        if (other !== container) {
-          other.querySelector('.mobile-dropdown-wrapper').classList.remove('open');
-        }
-      });
-    });
+    const willOpen = !kybrDropdownWrapper.classList.contains('open');
+
+    closeAllDropdowns();
+
+    if (willOpen) {
+      kybrDropdownWrapper.classList.add('open');
+      hideTooltips();
+    } else {
+      showTooltips();
+    }
+    
   });
 
   // 3. Selection process event handler mapping
@@ -280,6 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // close layout list window following selection
       kybrDropdownWrapper.classList.remove('open');
+      showTooltips();
 
       appKybrProfile.profile = selectedValue;
 
@@ -287,8 +315,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  window.addEventListener('click', () => {
-    kybrDropdownWrapper.classList.remove('open');
+  document.addEventListener('click', () => {
+    closeAllDropdowns();
+    showTooltips();
   });
 
   async function loadPassageData() {
@@ -737,12 +766,6 @@ document.addEventListener("DOMContentLoaded", () => {
     footerAttribution.classList.remove('hidden');
     initializeNewTypingPassage(appState.difficulty, appState.mode, appState.duration);
     isTestActive = true;
-  });
-
-  document.addEventListener('click', () => {
-    document.querySelectorAll('.mobile-dropdown-wrapper').forEach(el => {
-      el.classList.remove('open');
-    });
   });
 
   async function startApp() {
