@@ -6,6 +6,8 @@
 
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
   <link rel="stylesheet" href="style.css">
+  <!-- load font-awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
   <script src="script.js" defer></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js" defer></script>
@@ -58,13 +60,15 @@
 
       <div class="difficulty-mode-wrapper">
         <div class="selection-container" data-type="difficulty">
-          <p class="desktop-label">Difficulty:</p>
+          <!-- <p class="desktop-label">Difficulty:</p>
           <div class="desktop-btns">
             <button class="diff-switches-btn" data-value="easy">Easy</button>
             <button class="diff-switches-btn" data-value="medium">Medium</button>
             <button class="diff-switches-btn active" data-value="hard">Hard</button>
-          </div>
+          </div> -->
+
           <div class="mobile-dropdown-wrapper">
+            <div class="tooltip">Difficulty</div>
             <button class="dropdown-trigger-btn">
               <span class="trigger-text">Hard</span>
               <span class="chevron-icon"></span>
@@ -84,13 +88,14 @@
         </div>
 
         <div class="selection-container" data-type="mode">
-          <p class="desktop-label">Mode:</p>
-
-          <!-- <div class="desktop-btns">
+          <!-- <p class="desktop-label">Mode:</p>
+          <div class="desktop-btns">
             <button class="mood-switches-btn active" data-value="timed-60s">Timed (60s)</button>
             <button class="mood-switches-btn" data-value="passage">Passage</button>
           </div> -->
+
           <div class="mobile-dropdown-wrapper">
+            <div class="tooltip">Mode</div>
             <button class="dropdown-trigger-btn">
               <span class="trigger-text">Timed (60s)</span>
               <span class="chevron-icon"></span>
@@ -114,20 +119,46 @@
             </div>
           </div>
         </div>
+
+        <div class="kybr-selection-container" data-type="kybr-aduio-feedback">
+          <div class="kybr-mobile-dropdown-wrapper">
+            <div class="tooltip">Keybr profile</div>
+            <button class="kybr-dropdown-trigger-btn">
+              <span class="kybr-trigger-text">Cream</span>
+              <span class="chevron-icon"></span>
+            </button>
+            <div class="kybr-dropdown-menu-list">
+              <div class="kybr-dropdown-item active" data-value="cream">
+                <span class="radio-dot"></span> Cream
+              </div>
+              <div class="kybr-dropdown-item" data-value="holypanda">
+                <span class="radio-dot"></span> Holy Pandas
+              </div>
+              <div class="kybr-dropdown-item" data-value="alpaca">
+                <span class="radio-dot"></span> Alpacas
+              </div>
+              <div class="kybr-dropdown-item" data-value="turquoise">
+                <span class="radio-dot"></span> Turquoise
+              </div>
+              <div class="kybr-dropdown-item" data-value="blackink">
+                <span class="radio-dot"></span> Black Inks
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   
     <div class="passage-container js-passage-container">
       <!-- Passage -->
-       <p class="passage js-passage">
-        The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. "We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods," the lead researcher observed. "Globalization isn't as modern as we assume."
-       </p>
+      <p class="passage js-passage">
+      The archaeological expedition unearthed artifacts that complicated prevailing theories about Bronze Age trade networks. Obsidian from Anatolia, lapis lazuli from Afghanistan, and amber from the Baltic—all discovered in a single Mycenaean tomb—suggested commercial connections far more extensive than previously hypothesized. "We've underestimated ancient peoples' navigational capabilities and their appetite for luxury goods," the lead researcher observed. "Globalization isn't as modern as we assume."
+      </p>
 
-       <div class="start-btn-container bg-blur-effect js-start-btn-container">
-         <button class="start-btn js-start-btn">Start Typing Test</button>
-         <p>Or click the text and start typing</p>
-       </div>
-
+      <div class="start-btn-container bg-blur-effect js-start-btn-container">
+        <button class="start-btn js-start-btn">Start Typing Test</button>
+        <p>Or click the text and start typing</p>
+      </div>
     </div>
 
     <div class="restart-btn-container js-restart-btn-container hidden">
@@ -197,18 +228,6 @@
     <!-- <img class="pattern-confetti" src="assets/images/pattern-confetti.svg"> -->
   </div>
 
-  <!-- pres audio -->
-  <audio class="js-pres-backspace-audio" preload="auto" src="assets/audio/cream/press/BACKSPACE.mp3"></audio>
-  <audio class="js-pres-enter-audio" preload="auto" src="assets/audio/cream/press/ENTER.mp3"></audio>
-  <audio class="js-pres-space-audio" preload="auto" src="assets/audio/cream/press/SPACE.mp3"></audio>
-  <audio class="js-pres-generic-audio" preload="auto" src="assets/audio/cream/press/GENERIC_R3.mp3"></audio>
-
-  <!-- release audio -->
-  <audio class="js-release-backspace-audio" src="assets/audio/cream/release/BACKSPACE.mp3" preload="auto"></audio>
-  <audio class="js-release-enter-audio" src="assets/audio/cream/release/ENTER.mp3" preload="auto"></audio>
-  <audio class="js-release-space-audio" src="assets/audio/cream/release/SPACE.mp3" preload="auto"></audio>
-  <audio class="js-release-generic-audio" src="assets/audio/cream/release/GENERIC.mp3" preload="auto"></audio>
-  
   <!-- Test Complete End -->
 
   <footer class="attribution js-attribution">

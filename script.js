@@ -5,6 +5,10 @@ document.addEventListener("DOMContentLoaded", () => {
     mode: 'timed',
   };
 
+  const appKybrProfile = {
+    profile: 'cream',
+  };
+
   const allTimeScores = {
     wpm: "0",
     accuracy: "100%"
@@ -33,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const startContainerBtnEl = document.querySelector('.js-start-btn-container');
 
-
   const restartContainerBtnEl = document.querySelector('.js-restart-btn-container');
   const passageContainerEl = document.querySelector('.js-passage-container');
   const topSectionEl = document.querySelector('.js-top-section');
@@ -46,6 +49,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultsPanel = document.querySelector('.js-results-panel');
   const shareResultEl = document.querySelector('.js-share-result-card');
   const shareBtn = document.querySelector('.js-share-btn');
+
+  // 
+  const kybrSelectionContainers = document.querySelector('.kybr-selection-container');
+  const kybrDropdownWrapper = kybrSelectionContainers.querySelector('.kybr-mobile-dropdown-wrapper');
+  const kybrDropdownTriggerBtn = kybrSelectionContainers.querySelector('.kybr-dropdown-trigger-btn');
+  const kybrTriggerText = kybrSelectionContainers.querySelector('.kybr-trigger-text');
+  const kybrMenuItems = kybrSelectionContainers.querySelectorAll('.kybr-dropdown-item');
 
   async function captureScreenshot() {
     try {
@@ -72,13 +82,11 @@ document.addEventListener("DOMContentLoaded", () => {
     captureScreenshot();
   });
 
-
   // html2canvas(document.querySelector("#capture")).then(canvas => {
   //   document.body.appendChild(canvas)
   // });
 
   // html2canvas(element, options);
-
 
   // Save to storage
   function saveToLocalstorage(key, value) {
@@ -154,7 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         appState[type] = newValue;
       }
-      console.log(`Updated state ->`, appState);
+      // console.log(`Updated state ->`, appState);
 
       // Update Desktop buttons styling
       desktopButtons.forEach(btn => {
@@ -207,6 +215,7 @@ document.addEventListener("DOMContentLoaded", () => {
           other.querySelector('.mobile-dropdown-wrapper').classList.remove('open');
         }
       });
+      kybrDropdownWrapper.classList.remove('open');
 
       dropdownWrapper.classList.toggle('open');
     });
@@ -219,6 +228,67 @@ document.addEventListener("DOMContentLoaded", () => {
         dropdownWrapper.classList.remove('open');
       });
     });
+  });
+
+  const storageKybrKey = kybrSelectionContainers.getAttribute('data-type');
+
+  // 1. Initial configuration check from LocalStorage
+  const savedKybrValue = localStorage.getItem(storageKybrKey);
+
+  if (savedKybrValue) {
+    kybrMenuItems.forEach(i => i.classList.remove('active'));
+    
+    kybrMenuItems.forEach(item => {
+      if (item.getAttribute('data-value') === savedKybrValue) {
+        item.classList.add('active');
+        kybrTriggerText.textContent = item.textContent.trim();
+
+        appKybrProfile.profile = savedKybrValue;
+      }
+    });
+  }
+
+  // 2. Open/Close dropdown toggle behavior
+  kybrDropdownTriggerBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    kybrDropdownWrapper.classList.toggle('open');
+    // close the other difficulty and mode dropdown
+    selectionContainers.forEach(container => {
+      selectionContainers.forEach(other => {
+        if (other !== container) {
+          other.querySelector('.mobile-dropdown-wrapper').classList.remove('open');
+        }
+      });
+    });
+  });
+
+  // 3. Selection process event handler mapping
+  kybrMenuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const selectedValue = item.getAttribute('data-value');
+      const itemText = item.textContent.trim();
+
+      // clear old active elements and flag selected element target
+      kybrMenuItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+
+      // update main trigger text dynamically
+      kybrTriggerText.textContent = itemText;
+
+      // Save localStorage for tracking data property state parameter
+      localStorage.setItem(storageKybrKey, selectedValue);
+
+      // close layout list window following selection
+      kybrDropdownWrapper.classList.remove('open');
+
+      appKybrProfile.profile = selectedValue;
+
+      // console.log(`Setting [${storageKybrKey}] changed to: ${selectedValue}`);
+    });
+  });
+
+  window.addEventListener('click', () => {
+    kybrDropdownWrapper.classList.remove('open');
   });
 
   async function loadPassageData() {
@@ -296,37 +366,71 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  const audioMap = {
-    ' ': { press: document.querySelector('.js-pres-space-audio'), release: document.querySelector('.js-release-space-audio') },
-    'Backspace': { press: document.querySelector('.js-pres-backspace-audio'), release: document.querySelector('.js-release-backspace-audio') },
-    'Enter': { press: document.querySelector('.js-pres-enter-audio'), release: document.querySelector('.js-release-enter-audio') },
-    'generic': { press: document.querySelector('.js-pres-generic-audio'), release: document.querySelector('.js-release-generic-audio') }
-  };
+  const audioCache = {};
 
-  function playAudio(key, type) {
-    const soundSet = audioMap[key] || audioMap['generic'];
-    const audio = soundSet[type];
+  function playAudio(keyName, action) {
+    const profile = appKybrProfile.profile.toLowerCase();
+    const key = keyName.toLowerCase();
 
-    if (audio) {
-      audio.currentTime = 0;
-      audio.volume = 1;
-      audio.play().catch(e => {});
+    let fileName = key;
+    if (action === 'press' && key === 'generic') {
+      fileName = 'GENERIC_R3'
     }
+
+    const audioPath = `assets/audio/${profile}/${action}/${fileName}.mp3`;
+
+    if (!audioCache[audioPath]) {
+      audioCache[audioPath] = new Audio(audioPath);
+      audioCache[audioPath].preload = 'auto';
+    }
+
+    const keyAudio = audioCache[audioPath];
+    keyAudio.currentTime = 0;
+    keyAudio.volume = 1;
+
+    keyAudio.play().catch(error => {
+      console.warn(`Audio track missing or blocked: ${audioPath}`, error);
+    });
   }
+
+  function normalizeKeyName(eventKey) {
+    let key = eventKey.toUpperCase();
+    if (key === ' ') return 'SPACE';
+    if (key === 'BACKSPACE') return 'BACKSPACE';
+    if (key === 'ENTER') return 'ENTER';
+
+    return 'GENERIC';
+  }
+
+  const heldKey = {};
 
   document.addEventListener('keydown', (e) => {
     if ((e.key.length > 1 && e.key !== 'Backspace') || e.altKey || e.ctrlKey || e.metaKey) {
       return;
     }
     if (e.repeat) return;
-    playAudio(e.key, 'press');
+
+    const keyIdentifier = normalizeKeyName(e.key);
+    if (heldKey[keyIdentifier] === true) return;
+
+    heldKey[keyIdentifier] = true;
+
+    if (isTestActive) {
+      playAudio(keyIdentifier, 'press');
+    }
   });
   
   document.addEventListener('keyup', (e) => {
     if ((e.key.length > 1 && e.key !== 'Backspace') || e.altKey || e.ctrlKey || e.metaKey) {
       return;
     }
-    playAudio(e.key, 'release');
+
+    const keyIdentifier = normalizeKeyName(e.key);
+    heldKey[keyIdentifier] = false;
+
+    if (isTestActive) {
+      playAudio(keyIdentifier, 'release');
+    }
   });
 
   function handleTyping(event) {
