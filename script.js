@@ -399,11 +399,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function playAudio(keyName, action) {
     const profile = appKybrProfile.profile.toLowerCase();
-    const key = keyName.toLowerCase();
+    const key = keyName.toUpperCase();
 
     let fileName = key;
-    if (action === 'press' && key === 'generic') {
-      fileName = 'GENERIC_R3'
+    if (action === 'press' && key === 'GENERIC') {
+      fileName = 'GENERIC_R3';
     }
 
     const audioPath = `assets/audio/${profile}/${action}/${fileName}.mp3`;
