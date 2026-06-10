@@ -326,6 +326,13 @@ header, main {
   font-variant-ligatures: none;
   font-feature-settings: "liga" 0, "clig" 0, "dlig" 0;
   text-rendering: optimizeSpeed;
+  height: calc(1.6em * 5);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.passage::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
 }
 
 .start-btn-container {
@@ -703,7 +710,7 @@ header, main {
 /* Responsive Media Query */
 @media (max-width: 768px) {
   .pattern-confetti-div {
-    height: 180px;
+    height: 200px;
     background-size: 200% auto; 
     background-position: left center;
   }
@@ -754,11 +761,12 @@ header, main {
   .passage {
     font-size: 1.3rem;
     line-height: 1.5;
+    height: calc(1.5em * 5);
   }
 
   .test-complete-img {
-    height: 60px;
-    width: 60px;
+    height: 50px;
+    width: 50px;
     margin: 0;
   }
 
@@ -797,7 +805,7 @@ header, main {
     width: 100%;
     height: 100%;
     align-items: flex-start;
-    padding: 20px;
+    padding: 16px 26px;
     gap: 6px;
   }
 
@@ -806,7 +814,7 @@ header, main {
   }
 
   .value {
-    font-size: 20px;
+    font-size: 26px;
   }
 
   .go-again-btn {
@@ -833,5 +841,14 @@ header, main {
   .kybr-selection-container {
     display: none;
   }
-}
 
+  .passage {
+    margin-top: -15px;
+    font-size: 2rem;
+    line-height: 1.3;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    user-select: none;
+    height: calc(1.3em * 7);
+  }
+}

@@ -77,7 +77,7 @@ export function initializeNewTypingPassage(difficulty, mode, duration) {
   // --- Convert Text to HTML Array ---
   typingSession.currentTextArray = randomPassageText.split("");
 
-  typingSession.currentTextArray.forEach((letter, index) => {
+  typingSession.currentTextArray.forEach((letter) => {
     const span = document.createElement("span");
     span.textContent = letter;
     passageEl.appendChild(span);
@@ -134,6 +134,7 @@ export function handleTyping(event) {
 
       targetSpan.classList.remove("correct", "incorrect");
       targetSpan.classList.add("active-cursor");
+      targetSpan.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
     calculateLiveStats();
     return;
@@ -160,6 +161,7 @@ export function handleTyping(event) {
 
   if (typingSession.characterIndex < spans.length) {
     spans[typingSession.characterIndex].classList.add("active-cursor");
+    spans[typingSession.characterIndex].scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
   calculateLiveStats();
 
