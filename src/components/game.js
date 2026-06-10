@@ -12,7 +12,7 @@ const finalAccuracyEl = document.querySelector('.js-final-accuracy');
 const finalCharsEl = document.querySelector('.js-final-chars');
 const restartContainerBtnEl = document.querySelector('.js-restart-btn-container');
 const passageContainerEl = document.querySelector('.js-passage-container');
-  const topSectionEl = document.querySelector('.js-top-section');
+const topSectionEl = document.querySelector('.js-top-section');
 
 export async function loadPassageData() {
   try {
@@ -28,6 +28,8 @@ export function initializeNewTypingPassage(difficulty, mode, duration) {
   if (resultsPanel) {
     resultsPanel.classList.add("hidden");
   }
+
+  
 
   const footerAttribution = document.querySelector(".js-attribution");
 
@@ -75,7 +77,7 @@ export function initializeNewTypingPassage(difficulty, mode, duration) {
   // --- Convert Text to HTML Array ---
   typingSession.currentTextArray = randomPassageText.split("");
 
-  typingSession.currentTextArray.forEach((letter) => {
+  typingSession.currentTextArray.forEach((letter, index) => {
     const span = document.createElement("span");
     span.textContent = letter;
     passageEl.appendChild(span);

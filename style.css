@@ -323,6 +323,9 @@ header, main {
   font-size: 1.75rem;
   line-height: 1.6;
   color: var(--neutral-color-500);
+  font-variant-ligatures: none;
+  font-feature-settings: "liga" 0, "clig" 0, "dlig" 0;
+  text-rendering: optimizeSpeed;
 }
 
 .start-btn-container {

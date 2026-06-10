@@ -33,6 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const kybrTriggerText = kybrSelectionContainers.querySelector('.kybr-trigger-text');
   const kybrMenuItems = kybrSelectionContainers.querySelectorAll('.kybr-dropdown-item');
 
+  const hiddenInput = document.getElementById('hiddenInput');
+  const textDisplay = document.querySelector('.js-passage');
+
   async function captureScreenshot() {
     try {
       const canvas = await html2canvas(shareResultEl, {
@@ -319,6 +322,7 @@ document.addEventListener("DOMContentLoaded", () => {
   startTestBtnEl.addEventListener('click', (e) => {
     e.stopPropagation();
     startTestBtnEl.blur();
+
 
     passageContainerEl.classList.remove('hidden');
     restartContainerBtnEl.classList.remove('hidden');
