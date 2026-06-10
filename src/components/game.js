@@ -29,7 +29,7 @@ export function initializeNewTypingPassage(difficulty, mode, duration) {
     resultsPanel.classList.add("hidden");
   }
 
-  
+
 
   const footerAttribution = document.querySelector(".js-attribution");
 
@@ -214,6 +214,8 @@ function startTimer() {
 }
 
 function showTestComplete() {
+  calculateLiveStats();
+
   typingSession.isTestActive = false;
 
   // 1. Query all spans to count user inputs
@@ -343,8 +345,11 @@ function calculateLiveStats() {
 
   const minutesElapsed = secondsElapsed / 60;
 
-  const totalWords = typingSession.characterIndex / 5;
-  const currentWPM = Math.round(totalWords / minutesElapsed);
+  const rawTotalWords = typingSession.characterIndex / 5;
+  const grossWPM = rawTotalWords / minutesElapsed;
+
+  const errorPenalty = typingSession.totalInCorrected / minutesElapsed;
+  const netWPM = Math.max(0, Math.round(grossWPM - errorPenalty));
 
   let rawAccuracy = 100;
   if (typingSession.totalAttempts > 0) {
@@ -356,8 +361,12 @@ function calculateLiveStats() {
     );
   }
 
-  wmpEl.textContent = currentWPM;
+  if (wmpEl) {
+    wmpEl.textContent = netWPM.toString();
+  }
 
   // Updates the text content and applies the accuracy-based color gradient.
-  applyColorByAccuracy(accuracyEl, Math.round(rawAccuracy));
+  if (accuracyEl) {
+    applyColorByAccuracy(accuracyEl, Math.round(rawAccuracy));
+  }
 }

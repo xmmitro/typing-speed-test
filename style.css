@@ -327,8 +327,8 @@ header, main {
   font-feature-settings: "liga" 0, "clig" 0, "dlig" 0;
   text-rendering: optimizeSpeed;
   height: calc(1.6em * 5);
-  overflow-y: auto;
-  scrollbar-width: none;
+  overflow: hidden;
+  /* scrollbar-width: none; */
 }
 
 .passage::-webkit-scrollbar {
@@ -459,7 +459,7 @@ header, main {
 
 .test-complete-img {
   z-index: 110;
-  height: 45px;
+  height: 60px;
   transform: scale(0);
   pointer-events: none;
 }
@@ -469,8 +469,8 @@ header, main {
 }
 
 .img-circle-1 {
-  height: 70px;
-  width: 70px;
+  height: 80px;
+  width: 80px;
   border-radius: 50%;
   position: absolute;
   z-index: 109;
@@ -484,8 +484,8 @@ header, main {
 }
 
 .img-circle {
-  height: 95px;
-  width: 95px;
+  height: 100px;
+  width: 100px;
   border-radius: 50%;
   position: absolute;
   z-index: 108;
