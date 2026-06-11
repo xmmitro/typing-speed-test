@@ -706,6 +706,13 @@ header, main {
   display: none;
 }
 
+.unselectable {
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Older Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+  user-select: none;         /* Standard syntax */
+}
+
 
 /* Responsive Media Query */
 @media (max-width: 768px) {
