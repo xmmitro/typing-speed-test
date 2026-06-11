@@ -36,6 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const hiddenInput = document.getElementById('hiddenInput');
   const textDisplay = document.querySelector('.js-passage');
 
+  const isMobile = () =>
+    window.matchMedia("(pointer: coarse)").matches ||
+    navigator.maxTouchPoints > 0;
+
   async function captureScreenshot() {
     try {
       const canvas = await html2canvas(shareResultEl, {
@@ -254,10 +258,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.addEventListener('keydown', (e) => {
-    if (typingSession.isTestActive && e.key === ' ') {
-      e.preventDefault();
-    }
-
     if ((e.key.length > 1 && e.key !== 'Backspace') || e.altKey || e.ctrlKey || e.metaKey) {
       return;
     }
@@ -266,6 +266,11 @@ document.addEventListener("DOMContentLoaded", () => {
       passageContainerEl.classList.remove('hidden');
       restartContainerBtnEl.classList.remove('hidden');
       startContainerBtnEl.classList.add('hidden');
+
+      if (isMobile()) {
+        focusMobileInput();
+      }
+
       const firstSpan = document.querySelector('.js-passage span');
       if (firstSpan) firstSpan.classList.add('active-cursor');
 
@@ -276,9 +281,78 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!typingSession.isTestActive) return;
 
+    if (isMobile()) return;
+    if (e.key === ' ') e.preventDefault();
+
     handleTyping(e);
   });
 
+  textDisplay.addEventListener('click', () => {
+    if (startContainerBtnEl && !startContainerBtnEl.classList.contains('hidden')) {
+      startContainerBtnEl.classList.add('hidden');
+      restartContainerBtnEl.classList.remove('hidden');
+      passageContainerEl.classList.remove('hidden');
+      const firstSpan = document.querySelector('.js-passage span');
+      if (firstSpan) firstSpan.classList.add('active-cursor');
+      typingSession.isTestActive = true;
+    }
+
+    if (isMobile()) {
+      focusMobileInput();
+    }
+  });
+
+  const SENTINEL = '\u200B';
+  hiddenInput.value = SENTINEL;
+  let lastInputValue = SENTINEL;
+
+  hiddenInput.addEventListener('beforeinput', (e) => {
+    if (!isMobile()) return;
+    if (!typingSession.isTestActive) return;
+
+    if (e.inputType === 'insertText' && e.data === ' ') {
+      e.preventDefault();
+      playAudio('space', 'press');
+      handleTyping({ key: ' ', altKey: false, ctrlKey: false, metaKey: false });
+      setTimeout(() => playAudio('space', 'release'), 80);
+      return;
+    }
+
+    if (e.data) {
+      for (const char of e.data) {
+        const keyIdentifier = normalizeKeyName(char);
+        playAudio(keyIdentifier, 'press');
+        handleTyping({ key: char, altKey: false, ctrlKey: false, metaKey: false });
+        setTimeout(() => playAudio(keyIdentifier, 'release'), 80);
+      }
+    }
+
+    requestAnimationFrame(() => {
+      hiddenInput.value = SENTINEL;
+      lastInputValue = SENTINEL;
+    });
+  });
+
+  hiddenInput.addEventListener("keydown", (e) => {
+    if (!isMobile()) return;
+    if (!typingSession.isTestActive) return;
+    if (e.key === "Backspace") {
+      playAudio('backspace', 'press');
+      handleTyping({ key: "Backspace", altKey: false, ctrlKey: false, metaKey: false });
+      setTimeout(() => playAudio('backspace', 'release'), 80);
+    }
+  });
+
+  function focusMobileInput() {
+    hiddenInput.value = SENTINEL;
+    lastInputValue = SENTINEL;
+    hiddenInput.focus();
+    // Ensure sentinel survives focus on some Android browsers
+    requestAnimationFrame(() => {
+      hiddenInput.value = SENTINEL;
+    });
+  }
+  
   restartTestBtnEl.addEventListener('click', (e) => {
     e.stopPropagation();
     restartTestBtnEl.blur();
@@ -287,6 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
     accuracyEl.style.color = "hsl(0, 0%, 100%)";
     initializeNewTypingPassage(appState.difficulty, appState.mode, appState.duration);
     typingSession.isTestActive = true;
+    if (isMobile()) focusMobileInput();
   });
 
   goAgainBtnEl.addEventListener('click', (e) => {
@@ -306,6 +381,7 @@ document.addEventListener("DOMContentLoaded", () => {
     footerAttribution.classList.remove('hidden');
     initializeNewTypingPassage(appState.difficulty, appState.mode, appState.duration);
     typingSession.isTestActive = true;
+    if (isMobile()) focusMobileInput();
   });
 
   async function startApp() {
@@ -323,17 +399,18 @@ document.addEventListener("DOMContentLoaded", () => {
     e.stopPropagation();
     startTestBtnEl.blur();
 
-
     passageContainerEl.classList.remove('hidden');
     restartContainerBtnEl.classList.remove('hidden');
     startContainerBtnEl.classList.add('hidden');
 
     const firstSpan = document.querySelector('.js-passage span');
     if (firstSpan) firstSpan.classList.add('active-cursor');
+    
+    typingSession.isTestActive = true;
 
-    setTimeout(() => {
-      typingSession.isTestActive = true;
-    }, 10);
+    if (isMobile()) {
+      focusMobileInput();
+    }
   });
 
   startApp();

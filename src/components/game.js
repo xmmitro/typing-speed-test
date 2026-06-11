@@ -29,10 +29,6 @@ export function initializeNewTypingPassage(difficulty, mode, duration) {
     resultsPanel.classList.add("hidden");
   }
 
-
-
-  const footerAttribution = document.querySelector(".js-attribution");
-
   const passageEl = document.querySelector(".js-passage");
 
   if (!typingSession.passageBank || !passageEl) return;
@@ -132,6 +128,10 @@ export function handleTyping(event) {
       typingSession.characterIndex--;
       let targetSpan = spans[typingSession.characterIndex];
 
+      if (targetSpan.classList.contains('incorrect')) {
+        typingSession.currentErrors = Math.max(0, typingSession.currentErrors - 1);
+      }
+
       targetSpan.classList.remove("correct", "incorrect");
       targetSpan.classList.add("active-cursor");
       targetSpan.scrollIntoView({ block: "nearest", behavior: "smooth" });
@@ -154,6 +154,7 @@ export function handleTyping(event) {
     currentSpan.classList.add("incorrect");
     typingSession.incorrectCount++;
     typingSession.totalInCorrected++;
+    typingSession.currentErrors++;
   }
 
   currentSpan.classList.remove("active-cursor");
@@ -217,10 +218,6 @@ function showTestComplete() {
   calculateLiveStats();
 
   typingSession.isTestActive = false;
-
-  // 1. Query all spans to count user inputs
-  const passageEl = document.querySelector(".js-passage");
-  const spans = passageEl.querySelectorAll("span") || [];
 
   // 2. Read live scores from the active header stats
   const currentWPM = document.querySelector(".js-wpm")?.textContent || "0";
@@ -348,7 +345,7 @@ function calculateLiveStats() {
   const rawTotalWords = typingSession.characterIndex / 5;
   const grossWPM = rawTotalWords / minutesElapsed;
 
-  const errorPenalty = typingSession.totalInCorrected / minutesElapsed;
+  const errorPenalty = typingSession.currentErrors / minutesElapsed;
   const netWPM = Math.max(0, Math.round(grossWPM - errorPenalty));
 
   let rawAccuracy = 100;

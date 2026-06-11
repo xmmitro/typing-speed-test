@@ -25,6 +25,7 @@ export const typingSession = {
   incorrectCount: 0,
   totalAttempts: 0,
   totalInCorrected: 0,
+  currentErrors: 0,
 };
 
 // export {
