@@ -14,6 +14,10 @@ const restartContainerBtnEl = document.querySelector('.js-restart-btn-container'
 const passageContainerEl = document.querySelector('.js-passage-container');
 const topSectionEl = document.querySelector('.js-top-section');
 
+const isMobile = () =>
+  window.matchMedia("(pointer: coarse)").matches ||
+  navigator.maxTouchPoints > 0;
+
 export async function loadPassageData() {
   try {
     const response = await fetch("./data.json");
@@ -224,32 +228,34 @@ function startTimer() {
 }
 
 function fireStandard() {
+  const mobile = isMobile();
   confetti({
-    particleCount: 200,
-    spread: 100,
-    origin: { y: 0.6 }
+    particleCount: mobile ? 70 : 600,
+    spread: mobile ? 50 : 200,
+    origin: { y: mobile ? 0.5 : 0.6 }
   });
 }
 
 function fireSideCannons() {
-  const duration = 1500;
+  const mobile = isMobile();
+  const duration = mobile ? 1000 : 3000;
   const end = Date.now() + duration;
 
   (function frame() {
     // Left cannon
     confetti({
-      particleCount: 2,
-      angle: 60,
-      spread: 55,
-      origin: { x: 0, y: 0.8 }
+      particleCount: mobile ? 1 : 2,
+      angle: mobile ? 70 : 60,
+      spread: mobile ? 40 : 55,
+      origin: { x: mobile ? 0.1 : 0, y: mobile ? 0.9 : 0.8 }
     });
 
     // Right cannon
     confetti({
-      particleCount: 2,
-      angle: 120,
-      spread: 55,
-      origin: { x: 1, y: 0.8 }
+      particleCount: mobile ? 1 : 2,
+      angle: mobile ? 110 : 120,
+      spread: mobile ? 40 : 55,
+      origin: { x: mobile ? 0.9 : 1, y: mobile ? 0.9 : 0.8 }
     });
 
     // Continue until duration ends
