@@ -47,6 +47,7 @@ export function initializeNewTypingPassage(difficulty, mode, duration) {
   typingSession.totalInCorrected = 0;
   typingSession.correctCount = 0;
   typingSession.incorrectCount = 0;
+  typingSession.currentErrors = 0;
 
   if (typingSession.timerInterval) {
     clearInterval(typingSession.timerInterval);
@@ -128,9 +129,17 @@ export function handleTyping(event) {
       typingSession.characterIndex--;
       let targetSpan = spans[typingSession.characterIndex];
 
+      if (targetSpan.classList.contains('correct')) {
+        typingSession.currentErrors--;
+      }
+
       if (targetSpan.classList.contains('incorrect')) {
+        typingSession.incorrectCount--;
+        typingSession.totalInCorrected--;
         typingSession.currentErrors = Math.max(0, typingSession.currentErrors - 1);
       }
+
+      typingSession.totalAttempts = Math.max(0, typingSession.totalAttempts - 1);
 
       targetSpan.classList.remove("correct", "incorrect");
       targetSpan.classList.add("active-cursor");
@@ -214,6 +223,42 @@ function startTimer() {
   }, 1000);
 }
 
+function fireStandard() {
+  confetti({
+    particleCount: 200,
+    spread: 100,
+    origin: { y: 0.6 }
+  });
+}
+
+function fireSideCannons() {
+  const duration = 1500;
+  const end = Date.now() + duration;
+
+  (function frame() {
+    // Left cannon
+    confetti({
+      particleCount: 2,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0, y: 0.8 }
+    });
+
+    // Right cannon
+    confetti({
+      particleCount: 2,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1, y: 0.8 }
+    });
+
+    // Continue until duration ends
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
+}
+
 function showTestComplete() {
   calculateLiveStats();
 
@@ -253,7 +298,7 @@ function showTestComplete() {
 
   const imgStandard = document.querySelector(".js-test-complete-img");
   const imgSmashed = document.querySelector(".js-smashed-img");
-  const imgPatternConfetti = document.querySelector(".js-pattern-confetti");
+  // const imgPatternConfetti = document.querySelector(".js-pattern-confetti");
   const imgCircle = document.querySelector(".img-circle");
   const imgCircle1 = document.querySelector(".img-circle-1");
   const imgStarTop = document.querySelector(".star-top");
@@ -267,7 +312,7 @@ function showTestComplete() {
     imgStarBottom.classList.remove("hidden");
 
     imgSmashed.classList.add("hidden");
-    imgPatternConfetti.classList.add("hidden");
+    // imgPatternConfetti.classList.add("hidden");
   } else {
     imgStandard.classList.add("hidden");
     imgCircle.classList.add("hidden");
@@ -276,7 +321,9 @@ function showTestComplete() {
     imgStarBottom.classList.add("hidden");
 
     imgSmashed.classList.remove("hidden");
-    imgPatternConfetti.classList.remove("hidden");
+    // imgPatternConfetti.classList.remove("hidden");
+    fireStandard();
+    fireSideCannons();
   }
 
   const subMsgEl = document.querySelector(".js-sub-msg");

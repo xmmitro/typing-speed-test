@@ -48,8 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const image = canvas.toDataURL("image/png");
 
-      window.open(image);
-
       const link = document.createElement('a');
       link.href = image;
       link.download = "my-result.png";
@@ -115,12 +113,20 @@ document.addEventListener("DOMContentLoaded", () => {
           item.classList.remove('active');
         }
       });
-      
+      const wasActive = typingSession.isTestActive;
       initializeNewTypingPassage(appState.difficulty, appState.mode, appState.duration);
-      if (startContainerBtnEl && startContainerBtnEl.classList.contains('hidden')) {
+      if (wasActive) {
+        const firstSpan = document.querySelector('.js-passage span');
+
+        if (firstSpan) {
+          firstSpan.classList.add('active-cursor');
+        }
+
         typingSession.isTestActive = true;
-      } else {
-        typingSession.isTestActive = false;
+
+        if (isMobile()) {
+          focusMobileInput();
+        }
       }
     }
 
@@ -261,7 +267,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if ((e.key.length > 1 && e.key !== 'Backspace') || e.altKey || e.ctrlKey || e.metaKey) {
       return;
     }
-
+    // console.log('keydown:', e.key, typingSession.isTestActive);
+    
     if (startContainerBtnEl && !startContainerBtnEl.classList.contains('hidden')) {
       passageContainerEl.classList.remove('hidden');
       restartContainerBtnEl.classList.remove('hidden');
@@ -282,6 +289,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!typingSession.isTestActive) return;
 
     if (isMobile()) return;
+    
     if (e.key === ' ') e.preventDefault();
 
     handleTyping(e);
@@ -337,6 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!isMobile()) return;
     if (!typingSession.isTestActive) return;
     if (e.key === "Backspace") {
+      e.preventDefault();
       playAudio('backspace', 'press');
       handleTyping({ key: "Backspace", altKey: false, ctrlKey: false, metaKey: false });
       setTimeout(() => playAudio('backspace', 'release'), 80);
@@ -359,8 +368,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     timerEl.style.color = "hsl(0, 0%, 100%)";
     accuracyEl.style.color = "hsl(0, 0%, 100%)";
+
     initializeNewTypingPassage(appState.difficulty, appState.mode, appState.duration);
+
+    const firstSpan = document.querySelector('.js-passage span');
+
+    if (firstSpan) {
+      firstSpan.classList.add('active-cursor');
+    }
+
     typingSession.isTestActive = true;
+
     if (isMobile()) focusMobileInput();
   });
 
@@ -369,8 +387,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     goAgainBtnEl.blur();
     resultsPanel.classList.add('hidden');
-    const imgPatternConfetti = document.querySelector('.js-pattern-confetti');
-    imgPatternConfetti.classList.add('hidden');
+    // const imgPatternConfetti = document.querySelector('.js-pattern-confetti');
+    // imgPatternConfetti.classList.add('hidden');
     restartContainerBtnEl.classList.remove('hidden');
     passageContainerEl.classList.remove('hidden');
     topSectionEl.classList.remove('hidden');
@@ -380,6 +398,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const footerAttribution = document.querySelector('.js-attribution');
     footerAttribution.classList.remove('hidden');
     initializeNewTypingPassage(appState.difficulty, appState.mode, appState.duration);
+
+    const firstSpan = document.querySelector('.js-passage span');
+
+    if (firstSpan) {
+      firstSpan.classList.add('active-cursor');
+    }
+
     typingSession.isTestActive = true;
     if (isMobile()) focusMobileInput();
   });
