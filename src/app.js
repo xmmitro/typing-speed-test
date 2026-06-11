@@ -401,9 +401,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const firstSpan = document.querySelector('.js-passage span');
 
-    if (firstSpan) {
-      firstSpan.classList.add('active-cursor');
-    }
+    setTimeout(() => {
+      if (firstSpan) {
+        firstSpan.classList.add('active-cursor');
+  
+        if (isMobile()) {
+          firstSpan.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        }
+      }
+    },50);
 
     typingSession.isTestActive = true;
     if (isMobile()) focusMobileInput();
