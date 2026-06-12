@@ -224,6 +224,16 @@ document.addEventListener("DOMContentLoaded", () => {
       appKybrProfile.profile = selectedValue;
 
       // console.log(`Setting [${storageKybrKey}] changed to: ${selectedValue}`);
+
+      if (typingSession.isTestActive) {
+        const firstSpan = document.querySelector('.js-passage span');
+
+        if (firstSpan && isMobile()) {
+          focusMobileInput();
+        }
+
+        textDisplay.focus?.();
+      }
     });
   });
 
